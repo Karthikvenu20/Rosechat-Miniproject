@@ -13,7 +13,7 @@ void main() async {
 
   if (cacheUserId.isNotEmpty) {
     Constants.currentUser.id = cacheUserId;
-    Constants.currentUser.name = "user_\$cacheUserId";
+    Constants.currentUser.name = "user_$cacheUserId";
   }
 
   final navigatorKey = GlobalKey<NavigatorState>();
@@ -51,10 +51,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: Constants.routes, // ✅ Ensure Constants.routes is defined
-      initialRoute: Constants.currentUser.id.isEmpty
-          ? PageRouteName.login // ✅ Ensure PageRouteName is defined
-          : PageRouteName.home,
+      debugShowCheckedModeBanner: false, // Removes debug banner
+      routes: Constants.routes,
+      initialRoute: PageRouteName.splash, // Start with splash screen
       theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
       navigatorKey: widget.navigatorKey,
       builder: (context, child) {

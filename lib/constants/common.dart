@@ -8,8 +8,13 @@ Widget customAvatarBuilder(
   ZegoUIKitUser? user,
   Map<String, dynamic> extraInfo,
 ) {
+  final String avatarUrl =
+      user?.id != null
+          ? 'https://robohash.org/${user!.id}.png'
+          : 'https://robohash.org/default.png'; // ✅ Added fallback URL
+
   return CachedNetworkImage(
-    imageUrl: 'https://robohash.org/${user?.id}.png',
+    imageUrl: avatarUrl,
     imageBuilder:
         (context, imageProvider) => Container(
           decoration: BoxDecoration(
@@ -17,15 +22,17 @@ Widget customAvatarBuilder(
             image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
           ),
         ),
-    progressIndicatorBuilder:
-        (context, url, downloadProgress) =>
-            CircularProgressIndicator(value: downloadProgress.progress),
-    errorWidget: (context, url, error) {
-      ZegoLoggerService.logInfo(
-        '$user avatar url is invalid',
-        tag: 'live audio',
-        subTag: 'live page',
+    progressIndicatorBuilder: (context, url, downloadProgress) {
+      return Center(
+        child: CircularProgressIndicator(
+          value: downloadProgress.progress ?? 0.0, // ✅ Handles null progress
+        ),
       );
+    },
+    errorWidget: (context, url, error) {
+      debugPrint(
+        'Error loading avatar for user: ${user?.id}',
+      ); // ✅ Alternative to logInfo
       return ZegoAvatar(user: user, avatarSize: size);
     },
   );

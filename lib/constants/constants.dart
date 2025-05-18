@@ -1,12 +1,14 @@
 import 'package:democalls/home_page.dart';
 import 'package:democalls/login_page.dart';
+import 'package:democalls/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 /// Class containing route names used in the app.
 class PageRouteName {
-  static const String login = "/login";
-  static const String home = "/home_page";
+  static const String splash = '/splash';
+  static const String login = '/login';
+  static const String home = '/home';
 }
 
 /// Represents a user with an ID and name.
@@ -20,7 +22,7 @@ class UserInfo {
   bool get isEmpty => id.isEmpty;
 
   /// Checks if the user info is not empty
-  bool get isNotEmpty => id.isNotEmpty; // ✅ Fix: Added `isNotEmpty`
+  bool get isNotEmpty => id.isNotEmpty;
 
   /// Creates an empty user
   UserInfo.empty()
@@ -38,6 +40,7 @@ class Constants {
 
   /// Defines routes for navigation in the app.
   static final Map<String, WidgetBuilder> routes = {
+    PageRouteName.splash: (context) => const SplashScreen(),
     PageRouteName.login: (context) => const LoginPage(),
     PageRouteName.home: (context) => const ZegoUIKitPrebuiltCallMiniPopScope(
           child: HomePage(),

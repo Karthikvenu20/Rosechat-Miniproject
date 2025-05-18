@@ -1,7 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:democalls/services/login_service.dart';
 import 'package:democalls/utils/utils.dart';
-import 'package:flutter/material.dart';
 import 'package:democalls/constants/constants.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'register_page.dart'; // You'll need to create this similar to the sample
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,16 +15,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final TextEditingController _userIDTextCtrl = TextEditingController(
-    text: 'user_id',
-  );
+  final TextEditingController _userIDTextCtrl = TextEditingController(text: '');
+  final TextEditingController _passwordController = TextEditingController();
   final ValueNotifier<bool> _passwordVisible = ValueNotifier<bool>(false);
   bool _isLoading = false;
-
-  final TextStyle textStyle = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  ); // ✅ Fixed `textStyle`
 
   @override
   void initState() {
@@ -37,113 +35,185 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 50),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            logo(),
-            const SizedBox(height: 50),
-            userIDEditor(),
-            passwordEditor(),
-            const SizedBox(height: 30),
-            signInButton(),
-            if (_isLoading)
-              const CircularProgressIndicator(), // ✅ Loading indicator
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.pinkAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(FontAwesomeIcons.user,
+                      size: 80, color: Colors.white),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Welcome Back',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  _buildPhoneNumberField(),
+                  const SizedBox(height: 15),
+                  _buildPasswordField(),
+                  const SizedBox(height: 25),
+                  _buildLoginButton(),
+                  const SizedBox(height: 15),
+                  if (_isLoading)
+                    const CircularProgressIndicator(color: Colors.white),
+                  const SizedBox(height: 20),
+                  _buildRegisterButton(),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget logo() {
-    return Center(
-      child: Image.asset(
-        'assets/image.png',
-        width: 200,
-        height: 200,
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(
-            Icons.image_not_supported,
-            size: 100,
-            color: Colors.grey,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget userIDEditor() {
-    return TextFormField(
+  Widget _buildPhoneNumberField() {
+    return TextField(
       controller: _userIDTextCtrl,
-      decoration: const InputDecoration(
-        labelText: 'Phone Num. (Used as user ID)',
+      keyboardType: TextInputType.phone,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        hintText: 'Phone Number',
+        prefixIcon: const Icon(FontAwesomeIcons.phone, color: Colors.white),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 15),
       ),
-      onChanged: (value) {
-        setState(() {}); // ✅ Ensure UI updates when user types
-      },
     );
   }
 
-  Widget passwordEditor() {
+  Widget _buildPasswordField() {
     return ValueListenableBuilder<bool>(
       valueListenable: _passwordVisible,
       builder: (context, isPasswordVisible, _) {
-        return TextFormField(
+        return TextField(
+          controller: _passwordController,
           obscureText: !isPasswordVisible,
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            labelText: 'Password (Any character for test)',
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.2),
+            hintText: 'Password',
+            prefixIcon: const Icon(FontAwesomeIcons.lock, color: Colors.white),
             suffixIcon: IconButton(
               icon: Icon(
                 isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: Colors.white,
               ),
               onPressed: () {
                 _passwordVisible.value = !_passwordVisible.value;
               },
             ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 15),
           ),
         );
       },
     );
   }
 
-  Widget signInButton() {
+  Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed:
-          (_isLoading || _userIDTextCtrl.text.isEmpty)
-              ? null
-              : _handleLogin, // ✅ Disable if empty
-      child: Text('Sign In', style: textStyle),
+          (_isLoading || _userIDTextCtrl.text.isEmpty) ? null : _handleLogin,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.pinkAccent,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: const Text(
+        'LOG IN',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const RegisterPage()),
+        );
+      },
+      child: const Text(
+        "Don't have an account? Register",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          decoration: TextDecoration.underline,
+        ),
+      ),
     );
   }
 
   Future<void> _handleLogin() async {
-    setState(() => _isLoading = true); // ✅ Show loading before login
-
+    setState(() => _isLoading = true);
     try {
-      await login(
-        userId: _userIDTextCtrl.text,
-        userName: 'user_${_userIDTextCtrl.text}',
+      // First check with the server
+      final response = await http.post(
+        Uri.parse(
+            'http://192.168.230.124:5000/login'), // Replace with your actual server IP
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'phone': _userIDTextCtrl.text,
+          'password': _passwordController.text,
+        }),
       );
 
-      if (mounted) {
-        Navigator.pushNamed(
-          context,
-          PageRouteName.home,
-        ); // ✅ Navigate only if mounted
+      if (response.statusCode == 200) {
+        // Server login successful, proceed with your existing login
+        await login(
+          userId: _userIDTextCtrl.text,
+          userName: 'user_${_userIDTextCtrl.text}',
+        );
+        if (mounted) {
+          Navigator.pushNamed(
+            context,
+            PageRouteName.home,
+          );
+        }
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['error'] ?? 'Login failed');
       }
     } catch (e) {
-      debugPrint('Login Error: $e'); // ✅ Handle login failure
+      debugPrint('Login Error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed. Please try again.')),
+          SnackBar(content: Text(e.toString())),
         );
       }
     } finally {
       if (mounted) {
-        setState(() => _isLoading = false); // ✅ Hide loading after login
+        setState(() => _isLoading = false);
       }
     }
   }
