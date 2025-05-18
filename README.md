@@ -1,7 +1,8 @@
 RoseChat is a Flutter-based mobile application designed to facilitate seamless voice and video communication between family members,real time chatting and emergency settings with a focus on elderly users. The app enables easy contact management, emergency handling,Realtime chatting with family members, instant calling, and a user-friendly interface.
 
 FEATURES
-Phone Number Authentication using Firebase
+
+Phone Number Authentication 
 
 Contact List with photos and names
 
