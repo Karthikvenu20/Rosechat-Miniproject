@@ -3,8 +3,7 @@ elderly users to foster seamless and secure connectivity with their family and f
 at bridging the digital divide, the app features a user-friendly interface with large, accessible
 controls designed to accommodate less tech-savvy individuals. It integrates real-time voice and
 video calling via ZegoCloud, instant messaging through Firebase, and a robust emergency alert
-system powered by Python Flask and email notifications. Additional features include speech-
-to-text conversion and temporary image sharing for non- critical communication. The system’s
+system powered by Python Flask and email notifications. The system’s
 backend architecture combines Firebase for dynamic interactions and SQLite for local data han
 dling. With a focus on safety, ease of use, and emotional connectivity, Rose Chat offers a reliable
 solution for elderly engagement in the digital age. Future enhancements include geo-sensitive
