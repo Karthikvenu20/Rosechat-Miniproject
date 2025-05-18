@@ -19,6 +19,7 @@ Real-time Communication with low latency
 User-friendly UI tailored for simplicity
 
 TECHNOLOGIES USED
+
 Flutter & Dart
 
 Firebase Authentication & Firestore
