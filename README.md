@@ -1,17 +1,26 @@
-# democalls
+RoseChat is a Flutter-based mobile application designed to facilitate seamless voice and video communication between family members, with a focus on elderly users. The app enables easy contact management, instant calling, and a user-friendly interface.
 
-A new Flutter project.
+Features
+Phone Number Authentication using Firebase
 
-## Getting Started
+Contact List with photos and names
 
-This project is a starting point for a Flutter application.
+One-tap Voice & Video Calls using ZegoCloud SDK
 
-A few resources to get you started if this is your first Flutter project:
+Call Invitations & Notifications
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Real-time Communication with low latency
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# rosechat" 
+User-friendly UI tailored for simplicity
+
+Technologies Used
+Flutter & Dart
+
+Firebase Authentication & Firestore
+
+ZegoCloud SDK for voice/video calling
+
+Git for version control
+
+GitHub for remote repository
+
